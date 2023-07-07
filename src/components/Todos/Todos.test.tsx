@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import useEvent from "@testing-library/user-event";
+import userEvent from "@testing-library/user-event";
 
 import Todos from "./Todos.component";
 
@@ -33,19 +33,37 @@ describe("todo", () => {
 
     const textTask = "tarefa 1";
 
-    await useEvent.type(input, textTask);
+    await userEvent.type(input, textTask);
 
     screen.getByDisplayValue(textTask);
 
     const addButton = screen.getByLabelText("Adicionar tarefa");
 
-    await useEvent.click(addButton);
+    await userEvent.click(addButton);
 
     screen.getByPlaceholderText("Digite a tarefa");
 
     screen.getByText("tarefa 1");
 
     expect(screen.queryAllByText("tarefa 1")).toHaveLength(1);
+  });
+
+  it("should add new task on press enter", async () => {
+    render(<Todos />);
+
+    const input = screen.getByPlaceholderText("Digite a tarefa");
+
+    const textTask = "tarefa 1";
+
+    await userEvent.type(input, textTask);
+
+    screen.getByDisplayValue(textTask);
+
+    await userEvent.keyboard("{enter}");
+
+    screen.getByPlaceholderText("Digite a tarefa");
+
+    screen.getByText("tarefa 1");
   });
 
   it("should delete task on click bottom", async () => {
@@ -55,13 +73,13 @@ describe("todo", () => {
 
     const textTask = "tarefa 1";
 
-    await useEvent.type(input, textTask);
+    await userEvent.type(input, textTask);
 
     screen.getByDisplayValue(textTask);
 
     const addButton = screen.getByLabelText("Adicionar tarefa");
 
-    await useEvent.click(addButton);
+    await userEvent.click(addButton);
 
     screen.getByPlaceholderText("Digite a tarefa");
 
@@ -69,7 +87,7 @@ describe("todo", () => {
 
     const deleteButton = screen.getByLabelText(`Deletar tarefa: ${textTask}`);
 
-    await useEvent.click(deleteButton);
+    await userEvent.click(deleteButton);
 
     expect(screen.queryByText(textTask)).not.toBeInTheDocument();
   });

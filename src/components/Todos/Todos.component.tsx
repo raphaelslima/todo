@@ -13,11 +13,7 @@ const Todos = () => {
   const { register, handleSubmit, resetField } = useForm<{ title: string }>();
 
   const handleAddClick = (data: { title: string }) => {
-    console.log(data);
-    setTodos((prev) => [
-      ...prev,
-      { id: uuid(), title: data.title, isCompleted: false },
-    ]);
+    setTodos((prev) => [...prev, { id: uuid(), title: data.title }]);
 
     resetField("title");
   };
@@ -36,6 +32,9 @@ const Todos = () => {
             type="text"
             placeholder="Digite a tarefa"
             {...register("title", { required: true })}
+            onKeyDown={(e) =>
+              e.code === "Enter" ? handleSubmit(handleAddClick)() : false
+            }
           />
           <button
             aria-label="Adicionar tarefa"
